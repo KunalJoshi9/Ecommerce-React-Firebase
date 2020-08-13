@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import FormInput from './../forms/FormInput';
 import Button from './../forms/Button'
+import AuthWrapper from './../AuthWrapper'
 import {auth, handleUserProfile} from './../../firebase/utils'
 import './styles.scss'
 
@@ -65,14 +66,14 @@ class Signup extends Component {
     render() {
 
         const { displayName, email, password, confirmPassword, errors } = this.state;
+        const configAuthWrapper = {
+            headline: 'Registration'
+        };
+
 
         return (
-            <div className="signup">
-                <div className="wrap">
-                    <h2>
-                        Signup
-                    </h2>
-
+                <AuthWrapper {...configAuthWrapper}>
+                    <div className="formWrap">
                     {
                     errors.length > 0 && (
                         <ul>
@@ -86,47 +87,45 @@ class Signup extends Component {
                         </ul>
                     )}
 
-                    <div className="formWrap">
-                        <form onSubmit={this.handleFormSubmit}>
-                            <FormInput
-                                type="text"
-                                name="displayName"
-                                value={displayName}
-                                placeholder="Full name"
-                                onChange={this.handlChange}
-                            />
+                    <form onSubmit={this.handleFormSubmit}>
+                        <FormInput
+                            type="text"
+                            name="displayName"
+                            value={displayName}
+                            placeholder="Full name"
+                            onChange={this.handlChange}
+                        />
 
-                            <FormInput
-                                type="email"
-                                name="email"
-                                value={email}
-                                placeholder="Email"
-                                onChange={this.handlChange}
-                            />
+                        <FormInput
+                            type="email"
+                            name="email"
+                            value={email}
+                            placeholder="Email"
+                            onChange={this.handlChange}
+                        />
 
-                            <FormInput
-                                type="password"
-                                name="password"
-                                value={password}
-                                placeholder="Password"
-                                onChange={this.handlChange}
-                            />
+                        <FormInput
+                            type="password"
+                            name="password"
+                            value={password}
+                            placeholder="Password"
+                            onChange={this.handlChange}
+                        />
 
-                            <FormInput
-                                type="password"
-                                name="confirmPassword"
-                                value={confirmPassword}
-                                placeholder="Confirm Password"
-                                onChange={this.handlChange}
-                            />
+                        <FormInput
+                            type="password"
+                            name="confirmPassword"
+                            value={confirmPassword}
+                            placeholder="Confirm Password"
+                            onChange={this.handlChange}
+                        />
 
-                            <Button type="submit">
-                                Register
-                        </Button>
-                        </form>
+                        <Button type="submit">
+                            Register
+                    </Button>
+                    </form>
                     </div>
-                </div>
-            </div>
+                </AuthWrapper>
         )
     }
 }
