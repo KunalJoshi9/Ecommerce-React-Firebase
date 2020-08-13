@@ -4,7 +4,7 @@ function index(props) {
     return (
         <footer className="footer">
             <div className="wrap">
-                copyright notice
+                SimpleTut 2020
             </div>
         </footer>
     );

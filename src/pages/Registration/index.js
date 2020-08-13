@@ -1,10 +1,11 @@
 import React from 'react';
+import Signup from './../../components/Signup'
 import './styles.scss';
 
 function index(props) {
     return (
         <div>
-            <h1>Registration Page</h1>
+            <Signup/>
         </div>
     );
 }
