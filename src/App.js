@@ -1,22 +1,26 @@
-import React, { Component, useEffect } from 'react';
+import React, { useEffect } from 'react';
 import { Route, Switch } from 'react-router-dom'
-import {auth, handleUserProfile} from './firebase/utils'
 import {useDispatch} from 'react-redux'
 import {checkUserSession} from './redux/User/user.actions'
 
+import AdminToolbar from './components/AdminToolbar'
+
 import WithAuth from './hoc/withAuth'
+import WithAdminAuth from './hoc/withAdminAuth'
 
 import MainLayout from './layouts/MainLayout'
 import HomepageLayout from './layouts/HomepageLayout'
+import AdminLayout from './layouts/AdminLayout';
+import DashboardLayout from './layouts/DashboardLayout';
 
 import Homepage from './pages/Homepage'
 import Registration from './pages/Registration'
 import Recovery from './pages/Recovery'
 import Login from './pages/Login'
 import Dashboard from './pages/Dashboard'
+import Admin from './pages/Admin'
 
 import './default.scss';
-import userTypes from './redux/User/user.types';
 
 
 const App = props => {
@@ -29,6 +33,7 @@ const App = props => {
 
     return (
       <div className="App">
+        <AdminToolbar/>
          <Switch>
             <Route exact path="/" render={() => (
               <HomepageLayout>
@@ -54,10 +59,18 @@ const App = props => {
               />
               <Route path="/dashboard" render = {() => (
                 <WithAuth>
-                  <MainLayout>
+                  <DashboardLayout>
                     <Dashboard/>
-                  </MainLayout>
+                  </DashboardLayout>
                 </WithAuth>
+              )}
+              />
+              <Route path="/admin" render = {() => (
+                <WithAdminAuth>
+                    <AdminLayout>
+                      <Admin/>
+                    </AdminLayout>
+                </WithAdminAuth>
               )}
               />
           </Switch>

@@ -4,7 +4,7 @@ import './styles.scss'
 function Dashboard(props) {
     return (
         <div>
-            <h1>Your logged in!</h1>
+            <h1> Welcome to your account </h1>
         </div>
     )
 }

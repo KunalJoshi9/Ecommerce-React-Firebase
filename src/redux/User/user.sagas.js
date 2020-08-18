@@ -31,6 +31,7 @@ export function* emailSignIn({payload : {email, password}}){
 
         // Instead of dispatch now, convert await to yield and use yield put
         const { user } = yield auth.signInWithEmailAndPassword(email, password);
+        debugger
         yield getSnapShotFromUserAuth(user);
         
 

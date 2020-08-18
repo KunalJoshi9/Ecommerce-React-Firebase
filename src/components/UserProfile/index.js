@@ -4,7 +4,7 @@ import userIMG from './../../assets/user.png';
 
 const UserProfile = props => {
   const { currentUser } = props;
-  //const { displayName } = currentUser;
+  //const { displayName } = currentUser; TODO: Not able to get this field
 
   return (
     <div className="userProfile">

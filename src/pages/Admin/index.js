@@ -1,5 +1,5 @@
-import {useDispatch} from 'react-redux'
-import {addProductsStart} from './../../redux/Products/products.actions'
+import {useDispatch, useSelector} from 'react-redux'
+import {addProductsStart, fetchProductsStart, deleteProductStart} from './../../redux/Products/products.actions'
 import React, { useState, useEffect } from 'react';
 import { firestore } from './../../firebase/utils';
 import Modal from './../../components/Modal';
@@ -8,10 +8,13 @@ import FormSelect from './../../components/forms/FormSelect';
 import Button from './../../components/forms/Button';
 import './styles.scss';
 
+const mapState = ({productsData}) => ({
+  products: productsData.products
+});
 
 const Admin = props => {
+  const { products } = useSelector(mapState);
   const dispatch = useDispatch();
-  const [products, setProducts] = useState([]);
   const [hideModal, setHideModal] = useState(true);
   const [productCategory, setProductCategory] = useState('mens');
   const [productName, setProductName] = useState('');
@@ -27,21 +30,31 @@ const Admin = props => {
   };
 
   useEffect(() => {
-    firestore.collection('products').get().then(snapshot => {
-      const snapshotData = snapshot.docs.map(doc => doc.data());
-      setProducts(snapshotData);
-    });
+    dispatch(fetchProductsStart());
+    // firestore.collection('products').get().then(snapshot => {
+    //   const snapshotData = snapshot.docs.map(doc => doc.data());
+    //   setProducts(snapshotData);
+    // });
   }, []);
+
+  const resetForm = () => {
+    setHideModal(true);
+    setProductCategory('mens');
+    setProductName('');
+    setProductThumbnail('');
+    setProductPrice(0);
+  };
 
   const handleSubmit = e => {
     e.preventDefault();
-
     dispatch(addProductsStart({
          productCategory,
          productName,
          productThumbnail,
          productPrice
     }));
+
+    resetForm();
 
     // firestore.collection('products').doc().set({
     //     productCategory,
@@ -68,6 +81,7 @@ const Admin = props => {
         </div>
   
         <Modal {...configModal}>
+          
           <div className="addNewProductForm">
             <form onSubmit={handleSubmit}>
 
@@ -86,37 +100,31 @@ const Admin = props => {
               }]}
               handleChange={e => setProductCategory(e.target.value)}
             />
-  
-              <FormInput
-                label="Name"
-                type="text"
-                name="productName"
-                value={productName}
-                placeholder="Product Name"
-                handleChange={e => setProductName(e.target.value)}
-              />
-  
-              <FormInput
-                label="Main image URL"
-                type="url"
-                name="ProductImageURL"
-                value={ProductImageURL}
-                placeholder="Product Image URL"
-                handleChange={e => setProductImageURL(e.target.value)}
-              />
-  
-              <FormInput
-                label="Price"
-                type="number"
-                min="0.00"
-                max="10000.00"
-                step="0.01"
-                name="productPrice"
-                value={productPrice}
-                placeholder="Price"
-                handleChange={e => setProductPrice(e.target.value)}
-              />
-  
+
+            <FormInput
+              label="Name"
+              type="text"
+              value={productName}
+              handleChange={e => setProductName(e.target.value)}
+            />
+
+            <FormInput
+              label="Main image URL"
+              type="url"
+              value={productThumbnail}
+              handleChange={e => setProductThumbnail(e.target.value)}
+            />
+
+            <FormInput
+              label="Price"
+              type="number"
+              min="0.00"
+              max="10000.00"
+              step="0.01"
+              value={productPrice}
+              handleChange={e => setProductPrice(e.target.value)}
+            />
+
             <Button type="submit">
               Add product
             </Button>
@@ -124,7 +132,53 @@ const Admin = props => {
             </form>
           </div>
         </Modal>
-  
+              
+        <div className="manageProducts">
+          <table body ="0" cellPadding="0" cellSpacing="0">
+            <tbody>
+              <tr>
+                <th>
+                  <h1>Manage Products</h1>
+                </th>
+              </tr>
+              <tr>
+                <td>
+                  <table className="results" body ="0" cellPadding="10" cellSpacing="0">
+                    <tbody>
+                    {products.map((product, index) => {
+                      const {
+                        productName,
+                        productThumbnail,
+                        productPrice,
+                        documentID
+                      } = product;
+
+                      return (
+                        <tr key={index}>
+                          <td>
+                            <img className="thumb" src={productThumbnail} />
+                          </td>
+                          <td>
+                            {productName}
+                          </td>
+                          <td>
+                            ${productPrice}
+                          </td>
+                          <td>
+                            <Button onClick={() => dispatch(deleteProductStart(documentID))}>
+                              Delete
+                            </Button>
+                          </td>
+                        </tr>
+                      )
+                    })}
+                    </tbody>
+                  </table>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
       </div>
     );
   }

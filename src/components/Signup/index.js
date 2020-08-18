@@ -54,8 +54,6 @@ const Signup = props => {
             password,
             confirmPassword
         }));
-       
-
     }
 
     const configAuthWrapper = {
